@@ -49,7 +49,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private KubernetesClient k8sClient;
 
-    @Autowired
+    @javax.annotation.Resource
     private DeviceMapper deviceMapper;
 
     @Autowired
@@ -61,6 +61,7 @@ public class DeviceServiceImpl implements DeviceService {
     public void createDevice(EdgeDeviceDto deviceDto) {
         try {
             EdgeDevice device = formatEdgeDevice(deviceDto);
+            log.info("添加设备到边缘端");
             deviceClient.createOrReplace(device);
             // 将重建设备数据持久化到数据库
             DeviceManage deviceManage = new DeviceManage();
@@ -75,7 +76,7 @@ public class DeviceServiceImpl implements DeviceService {
                     .getMatchExpressions().get(0).getValues().get(0));
             String twins = JSON.toJSONString(device.getStatus().getTwins());
             deviceManage.setDeviceTwins(twins);
-            System.out.println("*****" + twins + "*****");
+            log.info("twins={}",twins);
             deviceManageMapper.saveDevice(deviceManage);
         }
         catch (Exception e){
@@ -237,7 +238,7 @@ public class DeviceServiceImpl implements DeviceService {
         });
         deviceStatus.setTwins(deviceTwins);
         device.setStatus(deviceStatus);
-        device.setApiVersion("devices.kubeedge.io/v1alpha1");
+        device.setApiVersion("devices.kubeedge.io/v1alpha2");
         device.setKind("Device");
         ObjectMeta objectMeta = new ObjectMeta();
         objectMeta.setName(deviceDto.getDeviceName());

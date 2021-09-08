@@ -43,7 +43,7 @@ public class K8sDeviceConfig {
             throws KubernetesClientException {
         CustomResourceDefinitionList crds = k8sClient.customResourceDefinitions().list();
         List<CustomResourceDefinition> crdsItems = crds.getItems();
-        System.out.println("Found " + crdsItems.size() + " CRD(s)");
+        log.info("Found " + crdsItems.size() + " CRD(s)");
         CustomResourceDefinitionContext deviceCrdCtx = null;
         for (CustomResourceDefinition crd : crdsItems) {
             ObjectMeta metadata = crd.getMetadata();
@@ -60,7 +60,7 @@ public class K8sDeviceConfig {
         deviceClient.watch(new Watcher<EdgeDevice>() {
             @Override
             public void eventReceived(Action action, EdgeDevice resource) {
-                System.out.println("==> " + action + " for " + resource);
+                log.info("==> " + action + " for " + resource);
                 if (resource.getSpec() == null) {
                     log.error("No Spec for resource " + resource);
                 }

@@ -67,8 +67,7 @@ public class TopicConsumer {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         map.put(df.format(new Date()),deviceDto);
         redisUtils.set("device_data_" + deviceDto.getDeviceName(), JSON.toJSONString(map));
-        System.out.println("-------------------查看Redis中的数据---------------------");
-        System.out.println(redisUtils.get("device_data_ble-watch"));
-        System.out.println("--------------------------------------------------------");
+        log.info("-------------------查看Redis中的数据---------------------");
+        log.info("key = device_data_ble-watch,value = "+redisUtils.get("device_data_ble-watch"));
     }
 }
